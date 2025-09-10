@@ -13,6 +13,10 @@
   box-sizing: border-box;
 }
 
+body.nav-open {
+  overflow: hidden;
+}
+
 html,
 body {
   height: 100%;
@@ -645,3 +649,4 @@ header[data-theme="light"] .logo-dark {
 @media (prefers-reduced-motion: reduce) {
   .p-layer { --dx: 0px; --dy: 0px; }
 }
+
