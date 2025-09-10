@@ -5,9 +5,9 @@ let ri = 0;
 let ci = 0;
 let mode = "type";
 
-let TYPE_DELAY = 18;
-let ERASE_DELAY = 12;
-let HOLD_DELAY = 350;
+let TYPE_DELAY = 55;
+let ERASE_DELAY = 45;
+let HOLD_DELAY = 650;
 let TYPE_STEP = 1;
 let ERASE_STEP = 1;
 
@@ -153,3 +153,4 @@ if (belt) {
   }, { threshold: 0 });
   o.observe(belt);
 }
+
