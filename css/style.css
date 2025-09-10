@@ -632,3 +632,16 @@ header[data-theme="light"] .logo-dark {
     grid-template-columns: 1fr;
   }
 }
+
+.p-layer {
+  transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px)));
+  will-change: transform;
+}
+
+.p-layer.glow {
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-layer { --dx: 0px; --dy: 0px; }
+}
