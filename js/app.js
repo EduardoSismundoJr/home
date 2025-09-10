@@ -5,11 +5,11 @@ let ri = 0;
 let ci = 0;
 let mode = "type";
 
-let TYPE_DELAY =90;
-let ERASE_DELAY = 80;
-let HOLD_DELAY = 600;
-let TYPE_STEP = 1;
-let ERASE_STEP = 1;
+let TYPE_DELAY = 8;
+let ERASE_DELAY = 6;
+let HOLD_DELAY = 250;
+let TYPE_STEP = 2;
+let ERASE_STEP = 2;
 
 function tick() {
   if (!typedEl) return;
@@ -101,3 +101,4 @@ if (about && aboutLight) {
     aboutLight.style.background = "transparent";
   });
 }
+
