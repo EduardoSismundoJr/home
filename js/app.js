@@ -1,4 +1,4 @@
-const roles = ["Web-Developer", "Freelancer", "Customer Support"];
+const roles = ["Virtual Assistant", "Freelancer", "Customer Support"];
 const typedEl = document.getElementById("typed");
 
 let ri = 0;
@@ -101,4 +101,5 @@ if (about && aboutLight) {
     aboutLight.style.background = "transparent";
   });
 }
+
 
