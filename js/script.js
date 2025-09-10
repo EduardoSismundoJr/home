@@ -28,6 +28,7 @@ menuBtn.addEventListener("click", () => {
   document.body.classList.toggle("nav-open", open);
 });
 
+
 window.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeMenu();
 });
@@ -83,4 +84,3 @@ window.addEventListener("load", () => {
   onScroll();
   setUnderline(activeLink);
 });
-
