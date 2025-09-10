@@ -25,6 +25,7 @@ function closeMenu() {
 menuBtn.addEventListener("click", () => {
   const open = nav.classList.toggle("open");
   menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  document.body.classList.toggle("nav-open", open);
 });
 
 window.addEventListener("keydown", (e) => {
@@ -82,3 +83,4 @@ window.addEventListener("load", () => {
   onScroll();
   setUnderline(activeLink);
 });
+
