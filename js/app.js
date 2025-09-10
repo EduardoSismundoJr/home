@@ -1,21 +1,19 @@
-const roles = ["Virtual Assistant", "Freelancer", "Customer Support"];
+const roles = ["Web-Developer", "Freelancer", "Customer Support"];
 const typedEl = document.getElementById("typed");
 
 let ri = 0;
 let ci = 0;
 let mode = "type";
 
-let TYPE_DELAY = 8;
-let ERASE_DELAY = 6;
-let HOLD_DELAY = 250;
-let TYPE_STEP = 2;
-let ERASE_STEP = 2;
+let TYPE_DELAY = 18;
+let ERASE_DELAY = 12;
+let HOLD_DELAY = 350;
+let TYPE_STEP = 1;
+let ERASE_STEP = 1;
 
 function tick() {
   if (!typedEl) return;
-
   const target = roles[ri];
-
   if (mode === "type") {
     ci = Math.min(ci + TYPE_STEP, target.length);
     typedEl.textContent = target.slice(0, ci);
@@ -35,10 +33,8 @@ function tick() {
       ri = (ri + 1) % roles.length;
     }
   }
-
   setTimeout(() => requestAnimationFrame(tick), mode === "type" ? TYPE_DELAY : ERASE_DELAY);
 }
-
 requestAnimationFrame(tick);
 
 const hero = document.getElementById("hero");
@@ -48,42 +44,71 @@ let targetX = 0;
 let targetY = 0;
 let curX = 0;
 let curY = 0;
-let t = 0;
+let raf = null;
+let active = false;
+let idle = 0;
 
-function handleMove(e) {
+function setTarget(e) {
   const r = hero.getBoundingClientRect();
-  const x = ("clientX" in e ? e.clientX : e.touches[0].clientX) - r.left;
-  const y = ("clientY" in e ? e.clientY : e.touches[0].clientY) - r.top;
+  const cx = "clientX" in e ? e.clientX : e.touches[0].clientX;
+  const cy = "clientY" in e ? e.clientY : e.touches[0].clientY;
+  const x = cx - r.left;
+  const y = cy - r.top;
   targetX = x / r.width - 0.5;
   targetY = y / r.height - 0.5;
+  kick();
 }
 
-function animateParallax() {
-  t += 0.016;
-  curX += (targetX - curX) * 0.08;
-  curY += (targetY - curY) * 0.08;
+function frame() {
+  curX += (targetX - curX) * 0.1;
+  curY += (targetY - curY) * 0.1;
 
-  layers.forEach((l) => {
-    const depth =
-      l.classList.contains("stars") ? 10 :
-      l.classList.contains("glow") ? 18 : 26;
+  for (const l of layers) {
+    const d = l.dataset.depth ? parseFloat(l.dataset.depth) : (l.classList.contains("stars") ? 10 : l.classList.contains("glow") ? 16 : 24);
+    l.style.setProperty("--dx", (-curX * d) + "px");
+    l.style.setProperty("--dy", (-curY * d) + "px");
+  }
 
-    const wobbleX = Math.cos(t * (0.8 + depth * 0.02)) * 2;
-    const wobbleY = Math.sin(t * (0.7 + depth * 0.02)) * 2;
+  const still = Math.abs(targetX - curX) + Math.abs(targetY - curY) < 0.001;
+  idle = still ? idle + 1 : 0;
+  if (idle > 10) {
+    active = false;
+    raf = null;
+    return;
+  }
+  raf = requestAnimationFrame(frame);
+}
 
-    const dx = (-curX * depth) + wobbleX;
-    const dy = (-curY * depth) + wobbleY;
-
-    l.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
-  });
-
-  requestAnimationFrame(animateParallax);
+function kick() {
+  if (!active) {
+    active = true;
+    raf = requestAnimationFrame(frame);
+  }
 }
 
 if (hero) {
-  hero.addEventListener("mousemove", handleMove);
-  hero.addEventListener("touchmove", handleMove, { passive: true });
-  requestAnimationFrame(animateParallax);
+  const obs = new IntersectionObserver(([e]) => {
+    if (e && e.isIntersecting) {
+      hero.addEventListener("pointermove", setTarget, { passive: true });
+      hero.addEventListener("touchmove", setTarget, { passive: true });
+      kick();
+    } else {
+      hero.removeEventListener("pointermove", setTarget);
+      hero.removeEventListener("touchmove", setTarget);
+      active = false;
+      if (raf) {
+        cancelAnimationFrame(raf);
+        raf = null;
+      }
+      targetX = 0;
+      targetY = 0;
+      for (const l of layers) {
+        l.style.setProperty("--dx", "0px");
+        l.style.setProperty("--dy", "0px");
+      }
+    }
+  }, { threshold: 0.1 });
+  obs.observe(hero);
 }
 
 const about = document.getElementById("about");
@@ -96,10 +121,35 @@ if (about && aboutLight) {
     const y = e.clientY - r.top;
     aboutLight.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(17,17,17,.05), transparent 60%)`;
   });
-
   about.addEventListener("mouseleave", () => {
     aboutLight.style.background = "transparent";
   });
 }
 
+const contactSwitch = document.getElementById("contactSwitch");
+const modeLink = document.querySelector(".contact-mode--link");
+const modeEmail = document.querySelector(".contact-mode--email");
 
+function setMode(checked) {
+  if (!modeLink || !modeEmail) return;
+  if (checked) {
+    modeEmail.classList.add("active");
+    modeLink.classList.remove("active");
+  } else {
+    modeLink.classList.add("active");
+    modeEmail.classList.remove("active");
+  }
+}
+
+if (contactSwitch) {
+  contactSwitch.addEventListener("change", () => setMode(contactSwitch.checked));
+  setMode(contactSwitch.checked);
+}
+
+const belt = document.querySelector(".xbelt");
+if (belt) {
+  const o = new IntersectionObserver(([e]) => {
+    belt.style.animationPlayState = e && e.isIntersecting ? "running" : "paused";
+  }, { threshold: 0 });
+  o.observe(belt);
+}
