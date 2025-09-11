@@ -1,4 +1,4 @@
-const roles = ["Virtual Assistant", "Freelancer", "Customer Support"];
+const roles = ["Virtual Assistant", "Freelancer", "Customer Support", "IT Support"];
 const typedEl = document.getElementById("typed");
 
 let ri = 0;
@@ -153,6 +153,7 @@ if (belt) {
   }, { threshold: 0 });
   o.observe(belt);
 }
+
 
 
 
