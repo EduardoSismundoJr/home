@@ -137,6 +137,7 @@ header[data-theme="light"] .logo-dark {
   transition: transform 0.25s ease, width 0.25s ease, left 0.25s ease;
 }
 
+/* Burger Menu */
 .menu-toggle {
   display: none;
   position: relative;
@@ -169,6 +170,14 @@ header[data-theme="light"] .logo-dark {
 
 .menu-toggle span:nth-child(3) {
   top: 27px;
+}
+
+header[data-theme="dark"] .menu-toggle span {
+  color: #ffffff; /* White icon for dark theme */
+}
+
+header[data-theme="light"] .menu-toggle span {
+  color: #000000; /* Black icon for light theme */
 }
 
 /* sections */
@@ -795,4 +804,15 @@ header[data-theme="light"] .logo-dark {
     padding-right: 0;
     justify-content: center;
   }
+}
+
+.section-portfolio .download-btn {
+  display: block;          
+  margin: 24px auto 0;     
+  text-align: center;
+  width: fit-content;      
+}
+
+.section-portfolio .download-btn.btn.btn-dark {
+  border-radius: 14px;
 }
