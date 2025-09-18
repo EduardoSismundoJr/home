@@ -20,6 +20,7 @@ function setUnderline(el) {
 function closeMenu() {
   nav.classList.remove("open");
   menuBtn.setAttribute("aria-expanded", "false");
+  document.body.classList.remove("nav-open");
 }
 
 menuBtn.addEventListener("click", () => {
@@ -27,7 +28,6 @@ menuBtn.addEventListener("click", () => {
   menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
   document.body.classList.toggle("nav-open", open);
 });
-
 
 window.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeMenu();
@@ -51,21 +51,24 @@ const sections = [...document.querySelectorAll("section[id]")];
 function onScroll() {
   const headerH = header.offsetHeight;
   let current = null;
+  const scrollPosition = window.scrollY + headerH;
 
-  for (const s of sections) {
-    const rect = s.getBoundingClientRect();
-    if (rect.top <= headerH && rect.bottom > headerH) {
+  for (let i = sections.length - 1; i >= 0; i--) {
+    const s = sections[i];
+    if (s.offsetTop <= scrollPosition) {
       current = s;
       break;
     }
   }
 
   if (current) {
+    // Check and change the header's theme if necessary
     const desired = current.getAttribute("data-header") || "light";
     if (header.getAttribute("data-theme") !== desired) {
       header.setAttribute("data-theme", desired);
     }
 
+    // This block for updating the active link now runs regardless of the theme
     const id = current.id;
     const match = links.find((l) => l.getAttribute("href") === "#" + id);
 
